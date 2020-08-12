@@ -13,14 +13,18 @@ from .tokens import account_activation_token
 from .models import Profile
 
 
-@login_required
 def avatar(request):
-    user = User.objects.get(username=request.user)
-    avatar = Profile.objects.filter(user=user)
-    context = {
-        "avatar": avatar,
-    }
-    return context
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user)
+        avatar = Profile.objects.filter(user=user)
+        context = {
+            "avatar": avatar,
+        }
+        return context
+    else:
+        return {
+            'NotLoggedIn': User.objects.none()
+        }
 
 
 @login_required
